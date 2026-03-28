@@ -1,5 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using Unity.VectorGraphics;
+using Unity.VisualScripting;
+using UnityEditor.Rendering;
+using UnityEngine.SocialPlatforms.Impl;
 
 public static class Timer
 {
@@ -52,13 +59,57 @@ public static class Timer
 
     public static void Save()
     {
-        // TODO : save our time steps (line 7 of this script) inside a file.
+        List<string> lignes = new List<string>();
+
+        foreach (long item in steps)
+        {
+            string texte = item.ToString();
+            lignes.Add(texte);
+        }
+
+        string résultat = string.Join("\n", lignes.ToArray());
+
+        //encodage
+        byte[] byteTab = System.Text.Encoding.UTF8.GetBytes(résultat);
+        string résultatEncodé = Convert.ToBase64String(byteTab);
+
+        if (File.Exists("score.txt"))
+        {
+            string lastScore = File.ReadAllText("score.txt");
+
+            byte[] bytesDecodés = Convert.FromBase64String(lastScore);
+            string contenuDecodé = System.Text.Encoding.UTF8.GetString(bytesDecodés);
+
+            string[] ligns = contenuDecodé.Split('\n');
+            long valeur = long.Parse(ligns[ligns.Length -1]);
+
+            if(valeur > steps[steps.Count - 1])
+            {
+                File.WriteAllText("score.txt", résultatEncodé);
+            }
+        }
+        else
+        {
+            File.WriteAllText("score.txt", résultatEncodé);
+        }
     }
 
     public static void Load()
     {
-        // TODO : load our time steps from a file (if we have any)
-        // and store them inside our steps variable (line 7 of this script)
-        // to show them to the player before starting a race.
+        if (File.Exists("score.txt"))
+        {
+            string toLoad = File.ReadAllText("score.txt");
+
+            Byte[] bytesDecodés = Convert.FromBase64String(toLoad);
+            string contenuDecodé = System.Text.Encoding.UTF8.GetString(bytesDecodés);
+
+            string[] lignes = contenuDecodé.Split('\n');
+
+            foreach (string item in lignes)
+            {
+                long valeur = long.Parse(item);
+                steps.Add(valeur);
+            }
+        }
     }
 }
