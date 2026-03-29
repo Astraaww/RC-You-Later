@@ -48,10 +48,4 @@ Il y a quelque assets dans le dossier des Models mais tu peux en importer d'autr
 Ce que tu a rajouté dans le projet :
 Ajout d'un menu play avec : 
 
-Design
-Font
-Code
-Grossissement des boutons au survole
-Bruit au survole
-bruit au clique
-Musique du fond
+Design - Font - Code - Grossissement des boutons au survole - Bruit au survole - bruit au clique - Musique du fond
